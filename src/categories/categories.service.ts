@@ -41,8 +41,8 @@ export class CategoriesService {
     });
   }
 
-  findmenu(id:number){
-    return this.datbaseService.category.findFirst({
+async   findmenu(id:number){
+    const category = await this.datbaseService.category.findFirst({
       where:{
         id,
       },
@@ -50,5 +50,7 @@ export class CategoriesService {
         menuItems:true
       }
     })
+    return category? category.menuItems:[]
   }
+ 
 }
