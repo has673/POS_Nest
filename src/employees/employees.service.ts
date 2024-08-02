@@ -8,6 +8,8 @@ export class EmployeesService {
   constructor(private readonly datbaseService:DatabaseService){}
 
  async  create(createEmployeeDto: Prisma.EmployeeCreateInput) {
+  const cat = createEmployeeDto.email
+  console.log(cat)
     return this.datbaseService.employee.create({
       data:createEmployeeDto
     });
