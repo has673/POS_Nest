@@ -30,4 +30,9 @@ export class CategoriesController {
   remove(@Param('id') id: string) {
     return this.categoriesService.remove(+id);
   }
+  @Get(':id/menu')
+  findMenu(@Param('id') id: string) {
+    return this.categoriesService.findmenu(+id);
+  }
+
 }

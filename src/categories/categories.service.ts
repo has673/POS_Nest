@@ -40,4 +40,15 @@ export class CategoriesService {
       }
     });
   }
+
+  findmenu(id:number){
+    return this.datbaseService.category.findFirst({
+      where:{
+        id,
+      },
+      include:{
+        menuItems:true
+      }
+    })
+  }
 }
