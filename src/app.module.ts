@@ -6,9 +6,10 @@ import { DatabaseModule } from './database/database.module';
 import { CategoriesModule } from './categories/categories.module';
 import { ItemsModule } from './items/items.module';
 import { AuthModule } from './auth/auth.module';
+import { ReservationModule } from './reservation/reservation.module';
 
 @Module({
-  imports: [EmployeesModule, DatabaseModule, CategoriesModule, ItemsModule, AuthModule],
+  imports: [EmployeesModule, DatabaseModule, CategoriesModule, ItemsModule, AuthModule, ReservationModule],
   controllers: [AppController],
   providers: [AppService],
 })
