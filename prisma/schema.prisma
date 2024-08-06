@@ -1,3 +1,8 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
   provider = "prisma-client-js"
@@ -7,7 +12,6 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
 model User {
   id            Int       @id @default(autoincrement())
   username      String    @unique
@@ -28,9 +32,9 @@ model Employee {
   salary        Int?     
   Phonenumber   Int?
   dateofbirth   DateTime?
-  Address       String?
+  Address        String?
   Details       String?
-  Starttime     DateTime?
+  Starttime      DateTime?
   profilePicture String? // Optional field for profile picture URL
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -45,7 +49,6 @@ model Category {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   menuItems   MenuItem[]
-  inventory   Inventory[]
 }
 
 model MenuItem {
@@ -59,7 +62,6 @@ model MenuItem {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }
-
 // model Reservation {
 //   id              Int       @id @default(autoincrement())
 //   tableNumber     Int
@@ -87,20 +89,6 @@ model Customer {
   updatedAt   DateTime  @updatedAt
 }
 
-model Inventory {
-  id          Int       @id @default(autoincrement())
-  name        String
-  categoryId  Int
-  category    Category  @relation(fields: [categoryId], references: [id])
-  quantity    Int
-  stock       Stock
-  status      Status
-  price       Float
-  perishable  Ans  
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-}
-
 enum Menu {
   NORMAL
   NEWYEAR
@@ -112,18 +100,4 @@ enum Menu {
 enum Options {
   IN_STOCK
   OUT_OF_STOCK
-}
-
-enum Stock {
-  INSTOCK
-  OUTOFSTOCK
-}
-
-enum Status {
-  ACTIVE
-  INACTIVE
-}
-enum Ans {
-  Yes
-  No
 }
