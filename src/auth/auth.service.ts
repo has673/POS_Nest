@@ -156,6 +156,7 @@ export class AuthService {
         verified: true,
       },
     });
+    
   }
 
   async newOtp(email: string) {
