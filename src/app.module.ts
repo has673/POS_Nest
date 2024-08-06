@@ -10,9 +10,10 @@ import { AuthModule } from './auth/auth.module';
  import { AuthMiddleware } from './common/middleware/auth.middleware';
 // import { ReservationModule } from './reservation/reservation.module';
 import { InventoryModule } from './inventory/inventory.module';
+import { ReservatonModule } from './reservaton/reservaton.module';
 
 @Module({
-  imports: [EmployeesModule, DatabaseModule, CategoriesModule, ItemsModule, AuthModule, InventoryModule],
+  imports: [EmployeesModule, DatabaseModule, CategoriesModule, ItemsModule, AuthModule, InventoryModule, ReservatonModule],
   controllers: [AppController],
   providers: [AppService],
 })
