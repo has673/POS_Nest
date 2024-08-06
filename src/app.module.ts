@@ -7,18 +7,19 @@ import { DatabaseModule } from './database/database.module';
 import { CategoriesModule } from './categories/categories.module';
 import { ItemsModule } from './items/items.module';
 import { AuthModule } from './auth/auth.module';
-// import { AuthMiddleware } from './middleware/authmiddleware';
+ import { AuthMiddleware } from './common/middleware/auth.middleware';
 // import { ReservationModule } from './reservation/reservation.module';
+import { InventoryModule } from './inventory/inventory.module';
 
 @Module({
-  imports: [EmployeesModule, DatabaseModule, CategoriesModule, ItemsModule, AuthModule],
+  imports: [EmployeesModule, DatabaseModule, CategoriesModule, ItemsModule, AuthModule, InventoryModule],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {
-  // configure(consumer: MiddlewareConsumer) {
-  //     consumer.apply(AuthMiddleware).forRoutes(
-  //       { path: 'employees', method: RequestMethod.ALL },)
+   configure(consumer: MiddlewareConsumer) {
+     consumer.apply(AuthMiddleware).forRoutes(
+     { path: 'employees', method: RequestMethod.ALL },)
 
-  //     }
+ }
 }
