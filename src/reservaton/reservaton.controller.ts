@@ -1,7 +1,8 @@
-import { Controller, Post,Body,ConflictException, InternalServerErrorException, Get  } from '@nestjs/common';
+import { Controller, Post,Body,ConflictException, InternalServerErrorException, Get, Put , Delete ,Param} from '@nestjs/common';
 import { ReservatonService } from './reservaton.service';
 import { CreateReservationWithCustomerDto } from './dto/create-reservation.dto';
 import { CheckSlotAvailabilityDto } from './dto/check_availability.dto';
+import { UpdateReservationDto } from './dto/update-reservation.dto';
 
 
 @Controller('reservaton')
@@ -43,7 +44,21 @@ async findAll(){
 }
 
 @Get(':id')
-async findOne(id:number){
-  return await this.reservatonService.findOne(id)
+async findOne(@Param('id')  id:string){
+  const idNumber = parseInt(id, 10);
+
+  return await this.reservatonService.findOne(idNumber)
+}
+
+@Put(':id')
+async update(@Param('id') id:string, @Body()  UpdateReservationDto:UpdateReservationDto){
+  const idNumber = parseInt(id, 10);
+  return await this.reservatonService.update(idNumber,UpdateReservationDto)
+}
+
+@Delete(":id")
+async delete(@Param('id') id:string){
+  const idNumber = parseInt(id, 10);
+ return  await this.reservatonService.remove(idNumber)
 }
 }

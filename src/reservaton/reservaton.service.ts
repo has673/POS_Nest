@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
 import {CreateReservationWithCustomerDto } from './dto/create-reservation.dto';
 import { CheckSlotAvailabilityDto } from './dto/check_availability.dto';
+import { UpdateReservationDto } from './dto/update-reservation.dto';
 
 @Injectable()
 export class ReservatonService {
@@ -40,29 +41,30 @@ export class ReservatonService {
             
         })
     }
+
+    async update(id:number, UpdateReservationDto:UpdateReservationDto){
+      const  res =    await this.databaseService.reservation.update({
+        where:{
+            id
+        },data:UpdateReservationDto
+       })
+       return res
+    }
     
      async  findOne(id: number) {
-        return await this.databaseService.reservation.findUnique({
+        return await this.databaseService.reservation.findFirst({
           where:{
             id,
-    
           }
         
         });
       }
-    
-      async update(id: number, updateEmployeeDto: Prisma.ReservationUpdateInput) {
-        return await this.databaseService.reservation.update({
-          where:{
-            id,
-          },data:updateEmployeeDto
-        });
-      }
+
     
       async remove(id: number) {
         return await this.databaseService.reservation.delete({
-          where:{
-            id,
+          where:{id,
+
           }
         });
       }
