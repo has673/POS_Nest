@@ -109,6 +109,7 @@ model Order {
   id          Int       @id @default(autoincrement())
   orderNumber String    @unique
   status      OrderStatus
+  totalPrice  Float       @default(0)
   customerId  Int
   customer    Customer  @relation(fields: [customerId], references: [id])
   orderItems  OrderItem[]
