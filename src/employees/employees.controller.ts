@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
 import { EmployeesService } from './employees.service';
 
 import { Prisma } from '@prisma/client';
+import { Request } from 'express';
 
 @Controller('employees')
 export class EmployeesController {
@@ -13,7 +14,8 @@ export class EmployeesController {
   }
 
   @Get()
-  findAll() {
+  findAll(@Req() req:Request) {
+    console.log(req['user'])
     return this.employeesService.findAll();
   }
 

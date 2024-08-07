@@ -5,7 +5,9 @@ import {
   Body,
   Patch,
   Param,
-  Delete
+  Delete,
+  Req,
+  UnauthorizedException
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
@@ -46,13 +48,28 @@ export class AuthController {
   }
 
   @Get(':id')
-  async getProfile(@Param('id') id:string) {
-   
-    const userId = parseInt(id)
-    console.log(userId)
-    if (!userId) {
-      throw new Error('User ID not found in request');
+  async getProfile(@Param('id') id:string , @Req() req:Request ) {
+    console.log(req.url," ",req.headers['authorization'])
+    const userIdFromParam = parseInt(id);
+    const userIdFromToken = req['user']?.userId;
+    console.log(req['user'])
+    if (userIdFromParam !== userIdFromToken) {
+      throw new UnauthorizedException('You can only update your own profile');
     }
-    return await this.authService.getProfile(userId);
+
+    return await this.authService.getProfile(userIdFromToken);
+  }
+
+  @Patch(':id')
+  async update(@Param('id') id: string,  req: Request, @Body() updateAuthDto: UpdateAuthDto) {
+    console.log('update')
+    const userIdFromParam = parseInt(id);
+    const userIdFromToken = req['user']?.userId;
+    console.log(req['user'])
+    if (userIdFromParam !== userIdFromToken) {
+      throw new UnauthorizedException('You can only update your own profile');
+    }
+
+    return await this.authService.updateProfile(userIdFromParam, updateAuthDto);
   }
 }

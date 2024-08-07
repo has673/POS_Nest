@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Body, Injectable,Param, Req } from '@nestjs/common';
 // import { CreateAuthDto } from './dto/create-auth.dto';
 // import { UpdateAuthDto } from './dto/update-auth.dto';
 import { Prisma } from '@prisma/client';
@@ -9,6 +9,8 @@ import  * as dayjs from 'dayjs';
 
 
 import { DatabaseService } from 'src/database/database.service';
+import { UpdateAuthDto } from './dto/update-auth.dto';
+import { Request } from 'express';
 
 
 @Injectable()
@@ -95,7 +97,6 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new Error('Invalid username or password');
     }
-   console.info(user.email)
     const token = jwt.sign({ userId: user.id , email:user.email} , 
       process.env.JWT_SECRET, 
       {expiresIn: '1h',
@@ -196,4 +197,29 @@ export class AuthService {
       }
     })
   }
+
+  async updateProfile(@Param() id: number,@Body() updateAuthDto: UpdateAuthDto) {
+   
+
+   const User = await this.datbaseService.user.findFirst({
+    where:{id}
+   })
+
+    
+    if (User) {
+      const updatedUser = await this.datbaseService.user.update({
+        where: {
+          id
+        },
+        data: {
+          ...updateAuthDto
+        }
+      });
+  
+      return updatedUser;
+    } else {
+      throw new Error('User not found');
+    }
+  }
+  
 }
