@@ -19,16 +19,18 @@ export class OrderController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.orderService.findOne(+id);
+    const orderId = parseInt(id)
+    return this.orderService.findOne(+orderId);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
-    return this.orderService.update(+id, updateOrderDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
+  //   return this.orderService.update(+id, updateOrderDto);
+  // }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.orderService.remove(+id);
+    const orderId = parseInt(id)
+    return this.orderService.remove(+orderId);
   }
 }
