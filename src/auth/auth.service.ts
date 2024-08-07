@@ -184,4 +184,16 @@ export class AuthService {
 
     return user;
   }
+
+  // async updateProfile(){
+
+  // }
+
+  async getProfile(id:number){
+   return  await this.datbaseService.user.findFirst({
+      where:{
+        id
+      }
+    })
+  }
 }

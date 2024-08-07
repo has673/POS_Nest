@@ -34,7 +34,8 @@ export class AppModule {
      consumer.apply(AuthMiddleware).forRoutes(
      { path: 'employees', method: RequestMethod.ALL },
      { path: 'reservaton', method: RequestMethod.ALL },
-     { path: 'inventory', method: RequestMethod.ALL }
+     { path: 'inventory', method: RequestMethod.ALL },
+    {  path:'auth'        ,method:RequestMethod.GET}
     )
 
  }

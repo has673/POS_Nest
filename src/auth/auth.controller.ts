@@ -1,26 +1,30 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { Prisma } from '@prisma/client';
-
+import { Request } from 'express';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('signup')
-  create(@Body() CreateAuthDto:Prisma.UserCreateInput) {
-    return this.authService.signup(CreateAuthDto)
-
-  
+  create(@Body() CreateAuthDto: Prisma.UserCreateInput) {
+    return this.authService.signup(CreateAuthDto);
   }
 
   @Post('login')
-  login(@Body() CreateAuthDto:Prisma.UserCreateInput) {
-    return this.authService.login(CreateAuthDto)
-
-  
+  login(@Body() CreateAuthDto: Prisma.UserCreateInput) {
+    return this.authService.login(CreateAuthDto);
   }
 
   @Post('recover-password')
@@ -41,7 +45,14 @@ export class AuthController {
     return this.authService.newOtp(email);
   }
 
-
-
-  
+  @Get(':id')
+  async getProfile(@Param('id') id:string) {
+   
+    const userId = parseInt(id)
+    console.log(userId)
+    if (!userId) {
+      throw new Error('User ID not found in request');
+    }
+    return await this.authService.getProfile(userId);
+  }
 }
