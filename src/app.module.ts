@@ -11,9 +11,10 @@ import { AuthModule } from './auth/auth.module';
 // import { ReservationModule } from './reservation/reservation.module';
 import { InventoryModule } from './inventory/inventory.module';
 import { ReservatonModule } from './reservaton/reservaton.module';
+import { OrderModule } from './order/order.module';
 
 @Module({
-  imports: [EmployeesModule, DatabaseModule, CategoriesModule, ItemsModule, AuthModule, InventoryModule, ReservatonModule],
+  imports: [EmployeesModule, DatabaseModule, CategoriesModule, ItemsModule, AuthModule, InventoryModule, ReservatonModule, OrderModule],
   controllers: [AppController],
   providers: [AppService],
 })
