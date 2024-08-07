@@ -58,6 +58,7 @@ model MenuItem {
   category    Category  @relation(fields: [categoryId], references: [id])
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  orderItems  OrderItem[]
 }
 
 model Reservation {
@@ -83,6 +84,7 @@ model Customer {
   phoneNumber String
   emailAddress String
   reservations Reservation[]
+  orders      Order[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }
@@ -97,6 +99,31 @@ model Inventory {
   status      Status
   price       Float
   perishable  Ans  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+
+
+model Order {
+  id          Int       @id @default(autoincrement())
+  orderNumber String    @unique
+  status      OrderStatus
+  customerId  Int
+  customer    Customer  @relation(fields: [customerId], references: [id])
+  orderItems  OrderItem[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model OrderItem {
+  id          Int       @id @default(autoincrement())
+  quantity    Int
+  price       Float
+  orderId     Int
+  order       Order     @relation(fields: [orderId], references: [id])
+  productId   Int
+  product     MenuItem  @relation(fields: [productId], references: [id])
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }
@@ -126,4 +153,11 @@ enum Status {
 enum Ans {
   Yes
   No
+}
+
+enum OrderStatus {
+  IN_PROCESS
+  COMPLETED
+  CANCELLED
+  READY
 }
