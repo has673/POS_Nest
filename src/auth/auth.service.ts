@@ -95,12 +95,14 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new Error('Invalid username or password');
     }
-
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-      expiresIn: '1h',
+   console.info(user.email)
+    const token = jwt.sign({ userId: user.id , email:user.email} , 
+      process.env.JWT_SECRET, 
+      {expiresIn: '1h',
     });
 
-    return { token, user };
+
+    return { token };
   }
   async recoverPassword(email: string, password: string) {
     const user = await this.datbaseService.user.findFirst({

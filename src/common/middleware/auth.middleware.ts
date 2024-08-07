@@ -18,8 +18,9 @@ export class AuthMiddleware implements NestMiddleware {
     }
 
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET); // Replace 'yourSecretKey' with your actual secret key
-      req['user'] = decoded;
+      const decoded = jwt.verify(token, process.env.JWT_SECRET) as { userId: number; email: string } ; 
+      req['user'] = decoded ;
+      console.log(decoded)
       next();
     } catch (error) {
       console.log('invalid token')
