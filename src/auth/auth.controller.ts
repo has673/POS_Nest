@@ -61,7 +61,7 @@ export class AuthController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string,  req: Request, @Body() updateAuthDto: UpdateAuthDto) {
+  async update(@Param('id') id: string,  @Req() req: Request, @Body() updateAuthDto: UpdateAuthDto) {
     console.log('update')
     const userIdFromParam = parseInt(id);
     const userIdFromToken = req['user']?.userId;

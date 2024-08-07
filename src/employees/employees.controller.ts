@@ -25,7 +25,8 @@ export class EmployeesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEmployeeDto: Prisma.EmployeeUpdateInput) {
+  update(@Param('id') id: string, @Req() req:Request, @Body() updateEmployeeDto: Prisma.EmployeeUpdateInput) {
+    console.log(req['user'])
     return this.employeesService.update(+id, updateEmployeeDto);
   }
 
