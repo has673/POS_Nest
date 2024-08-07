@@ -3,6 +3,7 @@ import { ReservatonService } from './reservaton.service';
 import { CreateReservationWithCustomerDto } from './dto/create-reservation.dto';
 import { CheckSlotAvailabilityDto } from './dto/check_availability.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
+import { SkipThrottle } from '@nestjs/throttler';
 
 
 @Controller('reservaton')
@@ -38,6 +39,8 @@ export class ReservatonController {
   }
 }
 
+
+@SkipThrottle()
 @Get()
 async findAll(){
   return await this.reservatonService.findAll()
