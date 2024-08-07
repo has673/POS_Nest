@@ -12,11 +12,22 @@ import { AuthModule } from './auth/auth.module';
 import { InventoryModule } from './inventory/inventory.module';
 import { ReservatonModule } from './reservaton/reservaton.module';
 import { OrderModule } from './order/order.module';
+import { ThrottlerModule ,ThrottlerGuard,} from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
+
 
 @Module({
-  imports: [EmployeesModule, DatabaseModule, CategoriesModule, ItemsModule, AuthModule, InventoryModule, ReservatonModule, OrderModule],
+  imports: [EmployeesModule, DatabaseModule, CategoriesModule, ItemsModule, AuthModule, InventoryModule, ReservatonModule, OrderModule,
+    ThrottlerModule.forRoot([{
+      ttl: 60000,
+      limit: 1,
+    }]),
+  ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,{
+    provide: APP_GUARD,
+  useClass: ThrottlerGuard
+  }],
 })
 export class AppModule {
    configure(consumer: MiddlewareConsumer) {
