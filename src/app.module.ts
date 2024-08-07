@@ -32,7 +32,10 @@ import { APP_GUARD } from '@nestjs/core';
 export class AppModule {
    configure(consumer: MiddlewareConsumer) {
      consumer.apply(AuthMiddleware).forRoutes(
-     { path: 'employees', method: RequestMethod.ALL },)
+     { path: 'employees', method: RequestMethod.ALL },
+     { path: 'reservaton', method: RequestMethod.ALL },
+     { path: 'inventory', method: RequestMethod.ALL }
+    )
 
  }
 }
