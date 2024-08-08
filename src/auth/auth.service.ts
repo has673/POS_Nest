@@ -217,9 +217,21 @@ export class AuthService {
   
     throw new BadRequestException('No file provided');
   }
-  
- 
 
+  async updateProfile(id: number, updateAuthDto:UpdateAuthDto){
+    // Find the user by ID
+    const user = await this.databaseService.user.findUnique({ where: { id } });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+      const updatedUser = await this.databaseService.user.update({
+        where: { id }, // Specify the user to update
+        data: {
+           ...updateAuthDto
+        },
+      });
+      return updatedUser; 
 ;
   }
 
+}

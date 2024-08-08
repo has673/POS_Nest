@@ -7,9 +7,10 @@ import {
   Param,
   Delete,
   Req,
+  Put,
   UnauthorizedException,
   UploadedFile,
-  UseInterceptors
+  UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthService } from './auth.service';
@@ -51,11 +52,11 @@ export class AuthController {
   }
 
   @Get(':id')
-  async getProfile(@Param('id') id:string , @Req() req:Request ) {
-    console.log(req.url," ",req.headers['authorization'])
+  async getProfile(@Param('id') id: string, @Req() req: Request) {
+    console.log(req.url, ' ', req.headers['authorization']);
     const userIdFromParam = parseInt(id);
     const userIdFromToken = req['user']?.userId;
-    console.log(req['user'])
+    console.log(req['user']);
     if (userIdFromParam !== userIdFromToken) {
       throw new UnauthorizedException('You can only update your own profile');
     }
@@ -66,24 +67,33 @@ export class AuthController {
   @Patch(':id')
   @UseInterceptors(FileInterceptor('file'))
   async update(
-  @Param('id') id: string, 
-  @UploadedFile() file: Express.Multer.File,
-   @Req() req: Request,
-  
- 
-
-) {
+    @Param('id') id: string,
+    @UploadedFile() file: Express.Multer.File,
+    @Req() req: Request,
+  ) {
     console.debug('Uploaded file:', file);
     const userIdFromParam = parseInt(id);
     const userIdFromToken = req['user']?.userId;
-    console.log(req['user'])
+    console.log(req['user']);
     if (userIdFromParam !== userIdFromToken) {
       throw new UnauthorizedException('You can only update your own profile');
     }
 
-    return await this.authService.update(userIdFromParam,file);
+    return await this.authService.update(userIdFromParam, file);
   }
 
-  
-
+  @Put(':id')
+  async updateProfile(
+  @Param('id') id: string, 
+  @Req() req: Request,
+  @Body() UpdateAuthDto: UpdateAuthDto) {
+    const userIdFromParam = parseInt(id);
+    const userIdFromToken = req['user']?.userId;
+    console.log(req['user']);
+    if (userIdFromParam !== userIdFromToken) {
+      throw new UnauthorizedException('You can only update your own profile');
+    }
+    return await this.authService.updateProfile(userIdFromParam,UpdateAuthDto)
+     
+  }
 }
