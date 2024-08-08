@@ -1,11 +1,11 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards} from '@nestjs/common';
 import { EmployeesService } from './employees.service';
-
 import { Prisma } from '@prisma/client';
 import { Request } from 'express';
 import { RolesGuard } from 'src/common/roles/role.guard';
 import { Role } from 'src/common/roles/role.enum';
 import { Roles } from 'src/common/roles/role.decorator';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('employees')
 @UseGuards(RolesGuard)

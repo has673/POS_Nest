@@ -7,8 +7,11 @@ import {
   Param,
   Delete,
   Req,
-  UnauthorizedException
+  UnauthorizedException,
+  UploadedFile,
+  UseInterceptors
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
@@ -61,8 +64,16 @@ export class AuthController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string,  @Req() req: Request, @Body() updateAuthDto: UpdateAuthDto) {
-    console.log('update')
+  @UseInterceptors(FileInterceptor('file'))
+  async update(
+  @Param('id') id: string, 
+  @UploadedFile() file: Express.Multer.File,
+   @Req() req: Request,
+  
+ 
+
+) {
+    console.debug('Uploaded file:', file);
     const userIdFromParam = parseInt(id);
     const userIdFromToken = req['user']?.userId;
     console.log(req['user'])
@@ -70,6 +81,9 @@ export class AuthController {
       throw new UnauthorizedException('You can only update your own profile');
     }
 
-    return await this.authService.updateProfile(userIdFromParam, updateAuthDto);
+    return await this.authService.update(userIdFromParam,file);
   }
+
+  
+
 }
