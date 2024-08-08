@@ -13,6 +13,7 @@ model User {
   username      String    @unique
   password      String
   email         String    @unique
+  role          Role?
   OTP           Int?
   otpExpiry     DateTime? // New field for OTP expiry time
   verified      Boolean?  @default(false)
@@ -163,4 +164,9 @@ enum OrderStatus {
   COMPLETED
   CANCELLED
   READY
+}
+
+enum Role {
+  ADMIN
+  SUBADMIN
 }

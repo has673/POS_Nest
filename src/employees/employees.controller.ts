@@ -1,10 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards} from '@nestjs/common';
 import { EmployeesService } from './employees.service';
 
 import { Prisma } from '@prisma/client';
 import { Request } from 'express';
+import { RolesGuard } from 'src/common/roles/role.guard';
+import { Role } from 'src/common/roles/role.enum';
+import { Roles } from 'src/common/roles/role.decorator';
 
 @Controller('employees')
+@UseGuards(RolesGuard)
 export class EmployeesController {
   constructor(private readonly employeesService: EmployeesService) {}
 
@@ -13,12 +17,14 @@ export class EmployeesController {
     return this.employeesService.create(createEmployeeDto);
   }
 
+  @Roles(Role.ADMIN)
   @Get()
   findAll(@Req() req:Request) {
-    console.log(req['user'])
+ 
     return this.employeesService.findAll();
   }
 
+  @Roles(Role.SUBADMIN)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.employeesService.findOne(+id);

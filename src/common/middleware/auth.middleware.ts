@@ -1,4 +1,5 @@
 import { Injectable, NestMiddleware, UnauthorizedException } from '@nestjs/common';
+import { Role } from '@prisma/client';
 import { Request, Response, NextFunction } from 'express';
 import * as jwt from 'jsonwebtoken';
 
@@ -20,10 +21,10 @@ export class AuthMiddleware implements NestMiddleware {
 
     try {
       console.log('try---')
-      const decoded = jwt.verify(token, process.env.JWT_SECRET) as { userId: number; email: string } ; 
+      const decoded = jwt.verify(token, process.env.JWT_SECRET) as { userId: number; email: string; role:Role } 
       req['user'] = decoded;
        console.log('Decoded JWT:', decoded);
-      console.log( req['user'])
+     
       next();
 
     } catch (error) {

@@ -20,6 +20,8 @@ import { OrderModule } from './order/order.module';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { Exclude } from 'class-transformer';
+import { RolesGuard } from './common/roles/role.guard';
+
 
 @Module({
   imports: [
@@ -43,8 +45,10 @@ import { Exclude } from 'class-transformer';
     AppService,
     {
       provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
+      useClass: ThrottlerGuard   },
+      {
+        provide: APP_GUARD,
+        useClass: RolesGuard   },
   ],
 })//  tetsing
 export class AppModule {
@@ -57,8 +61,7 @@ export class AppModule {
         { path: 'reservaton', method: RequestMethod.ALL },
         { path: 'reservaton/:id', method: RequestMethod.ALL },
         { path: 'inventory', method: RequestMethod.ALL },
-        { path: 'auth', method: RequestMethod.ALL },
-        { path: 'auth/:id', method: RequestMethod.ALL },
+        // { path: 'auth/:id', method: RequestMethod.GET },
       );
   }
 }
