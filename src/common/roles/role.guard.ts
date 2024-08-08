@@ -36,7 +36,7 @@ export class RolesGuard implements CanActivate {
     }
 
     // Log the reason for denial
-    console.debug(`User role does not match any required role and is not allowed ${requiredRoles}.`);
+    console.debug(`User role does not match any required role and is not allowed ${requiredRoles}`);
     throw new ForbiddenException('Access denied');
   }
 }

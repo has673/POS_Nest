@@ -21,6 +21,9 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { Exclude } from 'class-transformer';
 import { RolesGuard } from './common/roles/role.guard';
+import { S3Module } from './s3/s3.module';
+// import { S3Module } from './s3/s3.module';
+// import { S3Module } from './s3/s3.module';
 
 
 @Module({
@@ -33,12 +36,13 @@ import { RolesGuard } from './common/roles/role.guard';
     InventoryModule,
     ReservatonModule,
     OrderModule,
+    S3Module,
     ThrottlerModule.forRoot([
       {
         ttl: 600000,
         limit: 100,
       },
-    ]),
+    ])
   ],
   controllers: [AppController],
   providers: [
@@ -61,7 +65,7 @@ export class AppModule {
         { path: 'reservaton', method: RequestMethod.ALL },
         { path: 'reservaton/:id', method: RequestMethod.ALL },
         { path: 'inventory', method: RequestMethod.ALL },
-        // { path: 'auth/:id', method: RequestMethod.GET },
+        { path: 'auth/:id', method: RequestMethod.PATCH },
       );
   }
 }

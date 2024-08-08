@@ -1,11 +1,17 @@
 import { Injectable } from '@nestjs/common';
-
+import * as multer from 'multer';
 import { DatabaseService } from 'src/database/database.service';
 import { Prisma } from '@prisma/client';
+import { Request } from 'express';
+
 
 @Injectable()
 export class EmployeesService {
-  constructor(private readonly datbaseService:DatabaseService){}
+  constructor(
+    private readonly datbaseService:DatabaseService,
+ 
+  ){}
+
 
  async  create(createEmployeeDto: Prisma.EmployeeCreateInput) {
   const cat = createEmployeeDto.email

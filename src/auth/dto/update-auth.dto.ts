@@ -15,8 +15,10 @@ export class UpdateAuthDto extends PartialType(CreateAuthDto) {
   @IsString()
   @MinLength(6)
   readonly password: string;
-
+  
+  
   @IsOptional()
-  readonly profile:string
+  @IsOptional()
+   profilePicture?:string
     
 }
