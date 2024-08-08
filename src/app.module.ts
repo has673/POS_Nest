@@ -66,6 +66,8 @@ export class AppModule {
         { path: 'reservaton/:id', method: RequestMethod.ALL },
         { path: 'inventory', method: RequestMethod.ALL },
         { path: 'auth/:id', method: RequestMethod.PATCH },
+        { path: 'auth/:id', method: RequestMethod.PUT },
+        { path: 'auth/:id', method: RequestMethod.GET}
       );
   }
 }
