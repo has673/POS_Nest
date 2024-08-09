@@ -1,12 +1,9 @@
-import {
-  Module,
-  NestModule,
-  MiddlewareConsumer,
-  RequestMethod,
-} from '@nestjs/common';
-
+import { Module, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+// Import other modules as necessary
 import { EmployeesModule } from './employees/employees.module';
 import { DatabaseModule } from './database/database.module';
 import { CategoriesModule } from './categories/categories.module';
@@ -23,12 +20,15 @@ import { Exclude } from 'class-transformer';
 import { RolesGuard } from './common/roles/role.guard';
 import { S3Module } from './s3/s3.module';
 // import { S3Module } from './s3/s3.module';
+import { NotificationModule } from './notification/notification.module';
 import { EventsModule } from './events/events.module';
-// import { S3Module } from './s3/s3.module';
-
 
 @Module({
   imports: [
+    // Serve static files from the 'public' directory
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+    }),
     EmployeesModule,
     DatabaseModule,
     CategoriesModule,
@@ -44,19 +44,22 @@ import { EventsModule } from './events/events.module';
         limit: 100,
       },
     ]),
-    EventsModule
+    EventsModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
     {
       provide: APP_GUARD,
-      useClass: ThrottlerGuard   },
-      {
-        provide: APP_GUARD,
-        useClass: RolesGuard   },
+      useClass: ThrottlerGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
   ],
-})//  tetsing
+})
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
@@ -69,7 +72,7 @@ export class AppModule {
         { path: 'inventory', method: RequestMethod.ALL },
         { path: 'auth/:id', method: RequestMethod.PATCH },
         { path: 'auth/:id', method: RequestMethod.PUT },
-        { path: 'auth/:id', method: RequestMethod.GET}
+        { path: 'auth/:id', method: RequestMethod.GET }
       );
   }
 }
