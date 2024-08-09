@@ -6,15 +6,20 @@ import { RolesGuard } from 'src/common/roles/role.guard';
 import { Role } from 'src/common/roles/role.enum';
 import { Roles } from 'src/common/roles/role.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { EventsGateway } from 'src/events/events.gateway';
 
 @Controller('employees')
 @UseGuards(RolesGuard)
 export class EmployeesController {
-  constructor(private readonly employeesService: EmployeesService) {}
+  constructor(private readonly employeesService: EmployeesService,
+    private eventsgatewy : EventsGateway
+  ) {}
 
   @Post()
   create(@Body() createEmployeeDto:Prisma.EmployeeCreateInput) {
-    return this.employeesService.create(createEmployeeDto);
+     const emp = this.employeesService.create(createEmployeeDto);
+     this.eventsgatewy.sendMessage(`Employee created: }`)
+     return emp
   }
 
   @Roles(Role.ADMIN)
