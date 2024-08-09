@@ -23,6 +23,7 @@ import { Exclude } from 'class-transformer';
 import { RolesGuard } from './common/roles/role.guard';
 import { S3Module } from './s3/s3.module';
 // import { S3Module } from './s3/s3.module';
+import { EventsModule } from './events/events.module';
 // import { S3Module } from './s3/s3.module';
 
 
@@ -42,7 +43,8 @@ import { S3Module } from './s3/s3.module';
         ttl: 600000,
         limit: 100,
       },
-    ])
+    ]),
+    EventsModule
   ],
   controllers: [AppController],
   providers: [
