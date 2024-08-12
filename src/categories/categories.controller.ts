@@ -1,7 +1,12 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { Prisma } from '@prisma/client';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
+
+
+
+@ApiTags('Categories')
 @Controller('categories')
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}

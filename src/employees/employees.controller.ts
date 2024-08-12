@@ -7,7 +7,9 @@ import { Role } from 'src/common/roles/role.enum';
 import { Roles } from 'src/common/roles/role.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { EventsGateway } from 'src/events/events.gateway';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
+@ApiTags('Employees')
 @Controller('employees')
 @UseGuards(RolesGuard)
 export class EmployeesController {
@@ -24,6 +26,7 @@ export class EmployeesController {
 
   @Roles(Role.ADMIN)
   @Get()
+  @ApiOperation({ summary: 'Get all users' })
   findAll(@Req() req:Request) {
  
     return this.employeesService.findAll();
