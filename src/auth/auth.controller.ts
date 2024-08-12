@@ -18,7 +18,10 @@ import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { Prisma } from '@prisma/client';
 import { Request } from 'express';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
+
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
