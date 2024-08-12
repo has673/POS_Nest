@@ -1,7 +1,12 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { ItemsService } from './items.service';
 import { Prisma } from '@prisma/client';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
+
+
+
+@ApiTags('Items')
 
 @Controller('items')
 export class ItemsController {

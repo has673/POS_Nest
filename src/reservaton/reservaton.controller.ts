@@ -4,7 +4,12 @@ import { CreateReservationWithCustomerDto } from './dto/create-reservation.dto';
 import { CheckSlotAvailabilityDto } from './dto/check_availability.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { SkipThrottle } from '@nestjs/throttler';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
+
+
+
+@ApiTags('Reservation')
 
 @Controller('reservaton')
 export class ReservatonController {
