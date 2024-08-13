@@ -2,12 +2,13 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards} from
 import { EmployeesService } from './employees.service';
 import { Prisma } from '@prisma/client';
 import { Request } from 'express';
-import { RolesGuard } from 'src/common/roles/role.guard';
-import { Role } from 'src/common/roles/role.enum';
-import { Roles } from 'src/common/roles/role.decorator';
+import { Role } from '../common/roles/role.enum';
+import { Roles } from '../common/roles/role.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { EventsGateway } from 'src/events/events.gateway';
+import { EventsGateway } from '../events/events.gateway';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { RolesGuard } from '../common/roles/role.guard';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @ApiTags('Employees')
 @Controller('employees')
@@ -24,16 +25,19 @@ export class EmployeesController {
      return emp
   }
 
-  @Roles(Role.ADMIN)
+  
   @Get()
+  @Public()
   @ApiOperation({ summary: 'Get all users' })
+
   findAll(@Req() req:Request) {
  
     return this.employeesService.findAll();
   }
 
-  @Roles(Role.SUBADMIN)
+  
   @Get(':id')
+  @Public()
   findOne(@Param('id') id: string) {
     return this.employeesService.findOne(+id);
   }

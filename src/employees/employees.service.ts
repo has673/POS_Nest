@@ -1,11 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import * as multer from 'multer';
-import { DatabaseService } from 'src/database/database.service';
+import { DatabaseService } from '../database/database.service';
 import { Prisma } from '@prisma/client';
 import { Request } from 'express';
-import { EventsGateway } from 'src/events/events.gateway';
-
-
+import { EventsGateway } from '../events/events.gateway';
 @Injectable()
 export class EmployeesService {
   constructor(
