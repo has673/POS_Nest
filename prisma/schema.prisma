@@ -27,11 +27,13 @@ model Employee {
   Name          String    
   email         String    @unique
   salary        Int?     
-  Phonenumber   Int?
+  Phonenumber   String
+  role          EmployeeRole?
   dateofbirth   DateTime?
   Address       String?
   Details       String?
   Starttime     DateTime?
+  Endtime     DateTime?
   profilePicture String? // Optional field for profile picture URL
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -141,6 +143,11 @@ enum Menu {
 enum Options {
   IN_STOCK
   OUT_OF_STOCK
+}
+
+enum EmployeeRole {
+  MANAGER
+  STAFF
 }
 
 enum Stock {

@@ -12,7 +12,7 @@ import { Public } from 'src/common/decorators/public.decorator';
 
 @ApiTags('Employees')
 @Controller('employees')
-@UseGuards(RolesGuard)
+// @UseGuards(RolesGuard)
 export class EmployeesController {
   constructor(private readonly employeesService: EmployeesService,
     private eventsgatewy : EventsGateway

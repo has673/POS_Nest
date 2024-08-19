@@ -106,7 +106,7 @@ export class AuthService {
     return { token };
   }
 
-  async recoverPassword(email: string, password: string): Promise<void> {
+  async recoverPassword(email: string, password: string): Promise<{ email: string; username: string }> {
     const user = await this.databaseService.user.findFirst({ where: { email } });
 
     if (!user) {
@@ -115,13 +115,15 @@ export class AuthService {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await this.databaseService.user.update({
+   const updated =  await this.databaseService.user.update({
       where: { email },
       data: {
         password: hashedPassword,
         updatedAt: new Date(),
       },
     });
+
+    return updated
   }
 
   async verifyOtp(email: string, otp: number): Promise<void> {
