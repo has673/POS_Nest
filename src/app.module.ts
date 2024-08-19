@@ -26,7 +26,6 @@ import { S3Module } from './s3/s3.module';
 import { EventsModule } from './events/events.module';
 // import { S3Module } from './s3/s3.module';
 
-
 @Module({
   imports: [
     EmployeesModule,
@@ -40,36 +39,37 @@ import { EventsModule } from './events/events.module';
     S3Module,
     ThrottlerModule.forRoot([
       {
-        ttl: 600000,
+        ttl: 6000000,
         limit: 100,
       },
     ]),
-    EventsModule
+    EventsModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
     {
       provide: APP_GUARD,
-      useClass: ThrottlerGuard   },
-      {
-        provide: APP_GUARD,
-        useClass: RolesGuard   },
+      useClass: ThrottlerGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
   ],
-})//  tetsing
+}) //  tetsing
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(AuthMiddleware)
-      .forRoutes(
-        { path: 'employees', method: RequestMethod.ALL },
-        { path: 'employees/:id', method: RequestMethod.ALL },
-        { path: 'reservaton', method: RequestMethod.ALL },
-        { path: 'reservaton/:id', method: RequestMethod.ALL },
-        { path: 'inventory', method: RequestMethod.ALL },
-        { path: 'auth/:id', method: RequestMethod.PATCH },
-        { path: 'auth/:id', method: RequestMethod.PUT },
-        { path: 'auth/:id', method: RequestMethod.GET}
-      );
+    consumer.apply(AuthMiddleware).forRoutes(
+      // { path: 'employees', method: RequestMethod.POST },
+      { path: 'employees', method: RequestMethod.PUT },
+      { path: 'employees/:id', method: RequestMethod.PUT },
+      { path: 'reservaton', method: RequestMethod.ALL },
+      { path: 'reservaton/:id', method: RequestMethod.ALL },
+      { path: 'inventory', method: RequestMethod.ALL },
+      { path: 'auth/:id', method: RequestMethod.PATCH },
+      { path: 'auth/:id', method: RequestMethod.PUT },
+      { path: 'auth/:id', method: RequestMethod.GET },
+    );
   }
 }
