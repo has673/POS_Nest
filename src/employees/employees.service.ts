@@ -9,73 +9,77 @@ import { S3Service } from 'src/s3/s3.service';
 @Injectable()
 export class EmployeesService {
   constructor(
-    private readonly datbaseService:DatabaseService,
+    private readonly datbaseService: DatabaseService,
     private readonly eventsGateway: EventsGateway,
-    private readonly s3Service: S3Service
- 
-  ){}
+    private readonly s3Service: S3Service,
+  ) {}
 
+  //  async  create(createEmployeeDto: Prisma.EmployeeCreateInput) {
 
-//  async  create(createEmployeeDto: Prisma.EmployeeCreateInput) {
- 
-//     const emp = this.datbaseService.employee.create({
-//       data:createEmployeeDto
-//     });
-//     this.eventsGateway.sendMessage(`Employee created: ${(await emp).Name}`);
-//     return emp
-//   }
+  //     const emp = this.datbaseService.employee.create({
+  //       data:createEmployeeDto
+  //     });
+  //     this.eventsGateway.sendMessage(`Employee created: ${(await emp).Name}`);
+  //     return emp
+  //   }
 
-async create(createEmployeeDto: Prisma.EmployeeCreateInput, file?: Express.Multer.File) {
-  if (file) {
-    // Generate a unique key for the S3 bucket
-    const bucketKey = `${file.fieldname}-${Date.now()}`;
-    
-    // Upload the file to S3 and get the file URL
-    const fileUrl = await this.s3Service.uploadFile(file, bucketKey);
-    
-    // Include the file URL in the employee data
-    createEmployeeDto.profilePicture = fileUrl;
+  async create(
+    createEmployeeDto: Prisma.EmployeeCreateInput,
+    file?: Express.Multer.File,
+  ) {
+    if (file) {
+      // Generate a unique key for the S3 bucket
+      const bucketKey = `${file.fieldname}-${Date.now()}`;
+
+      // Upload the file to S3 and get the file URL
+      const fileUrl = await this.s3Service.uploadFile(file, bucketKey);
+
+      // Include the file URL in the employee data
+      createEmployeeDto.profilePicture = fileUrl;
+    }
+
+    const emp = await this.datbaseService.employee.create({
+      data: createEmployeeDto,
+    });
+
+    this.eventsGateway.sendMessage(`Employee created: ${emp.Name}`);
+    return emp;
   }
-  
-  const emp = await this.datbaseService.employee.create({
-    data: createEmployeeDto,
-  });
-
-  this.eventsGateway.sendMessage(`Employee created: ${emp.Name}`);
-  return emp;
-}
 
   async findAll() {
     return this.datbaseService.employee.findMany();
   }
 
- async  findOne(id: number) {
+  async findOne(id: number) {
     return this.datbaseService.employee.findUnique({
-      where:{
+      where: {
         id,
-
-      }
-    
+      },
     });
   }
 
   async update(id: number, updateEmployeeDto: Prisma.EmployeeUpdateInput) {
-     const emp = this.datbaseService.employee.update({
-      where:{
-        id,
-      },data:updateEmployeeDto
-    });
-    this.eventsGateway.sendMessage(`Employee updated: ${(await emp).Name}`);
-    return emp
+    try {
+      const emp = this.datbaseService.employee.update({
+        where: {
+          id,
+        },
+        data: updateEmployeeDto,
+      });
+      this.eventsGateway.sendMessage(`Employee updated: ${(await emp).Name}`);
+      return emp;
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   async remove(id: number) {
-     const emp =  this.datbaseService.employee.delete({
-      where:{
+    const emp = this.datbaseService.employee.delete({
+      where: {
         id,
-      }
+      },
     });
     this.eventsGateway.sendMessage(`Employee deleted: ${(await emp).Name}`);
-    return emp
+    return emp;
   }
 }
