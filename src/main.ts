@@ -9,8 +9,8 @@ async function bootstrap() {
   // Define CORS options
   const corsOptions: CorsOptions = {
     origin: 'http://localhost:3000',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials:true
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    credentials: true,
   };
 
   // Enable CORS with the defined options

@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards} from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { EmployeesService } from './employees.service';
 import { Prisma } from '@prisma/client';
 import { Request } from 'express';
@@ -9,33 +19,31 @@ import { EventsGateway } from '../events/events.gateway';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { RolesGuard } from '../common/roles/role.guard';
 import { Public } from 'src/common/decorators/public.decorator';
+import { S3Service } from 'src/s3/s3.service';
 
 @ApiTags('Employees')
 @Controller('employees')
 // @UseGuards(RolesGuard)
 export class EmployeesController {
-  constructor(private readonly employeesService: EmployeesService,
-    private eventsgatewy : EventsGateway
+  constructor(
+    private readonly employeesService: EmployeesService,
+    private eventsgatewy: EventsGateway,
   ) {}
 
   @Post()
-  create(@Body() createEmployeeDto:Prisma.EmployeeCreateInput) {
-     const emp = this.employeesService.create(createEmployeeDto);
-     this.eventsgatewy.sendMessage(`Employee created: }`)
-     return emp
+  create(@Body() createEmployeeDto: Prisma.EmployeeCreateInput) {
+    const emp = this.employeesService.create(createEmployeeDto);
+    this.eventsgatewy.sendMessage(`Employee created: }`);
+    return emp;
   }
 
-  
   @Get()
   @Public()
   @ApiOperation({ summary: 'Get all users' })
-
-  findAll(@Req() req:Request) {
- 
+  findAll(@Req() req: Request) {
     return this.employeesService.findAll();
   }
 
-  
   @Get(':id')
   @Public()
   findOne(@Param('id') id: string) {
@@ -43,8 +51,12 @@ export class EmployeesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Req() req:Request, @Body() updateEmployeeDto: Prisma.EmployeeUpdateInput) {
-    console.log(req['user'])
+  update(
+    @Param('id') id: string,
+    @Req() req: Request,
+    @Body() updateEmployeeDto: Prisma.EmployeeUpdateInput,
+  ) {
+    console.log(req['user']);
     return this.employeesService.update(+id, updateEmployeeDto);
   }
 
