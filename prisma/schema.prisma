@@ -55,7 +55,7 @@ model MenuItem {
   id          Int       @id @default(autoincrement())
   name        String
   description String?
-  price       Float
+  price       Int
   photo        String?
   availability Options
   categoryId  Int

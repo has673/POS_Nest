@@ -32,6 +32,7 @@ export class ItemsService {
       // Add the file URL to the DTO
       createItemDto.photo = fileUrl;
     }
+
     return this.datbaseService.menuItem.create({
       data: createItemDto,
     });
