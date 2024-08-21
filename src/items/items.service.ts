@@ -71,20 +71,29 @@ export class ItemsService {
       // Add the file URL to the DTO
       updateItemDto.photo = fileUrl;
     }
-
-    return this.datbaseService.menuItem.update({
-      where: {
-        id,
-      },
-      data: updateItemDto,
-    });
+    try {
+      const item = this.datbaseService.menuItem.update({
+        where: {
+          id,
+        },
+        data: updateItemDto,
+      });
+      console.log('update item');
+      return item;
+    } catch (err) {
+      console.log(err);
+    }
   }
 
-  remove(id: number) {
-    return this.datbaseService.menuItem.delete({
-      where: {
-        id,
-      },
-    });
+  async remove(id: number) {
+    try {
+      const item = await this.datbaseService.menuItem.delete({
+        where: {
+          id,
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
   }
 }

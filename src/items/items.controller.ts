@@ -27,9 +27,11 @@ export class ItemsController {
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   create(
-    @Body() createItemDto: Prisma.MenuItemCreateInput,
+    @Body() createItemDto: any,
     @UploadedFile() file: Express.Multer.File,
   ) {
+    createItemDto.price = parseInt(createItemDto.price);
+    createItemDto.categoryId = parseInt(createItemDto.categoryId);
     return this.itemsService.create(createItemDto, file);
   }
 
