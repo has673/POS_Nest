@@ -49,9 +49,11 @@ export class ItemsController {
   @UseInterceptors(FileInterceptor('file'))
   update(
     @Param('id') id: string,
-    @Body() updateItemDto: Prisma.MenuItemUpdateInput,
+    @Body() updateItemDto: any,
     @UploadedFile() file: Express.Multer.File,
   ) {
+    updateItemDto.price = parseInt(updateItemDto.price);
+    updateItemDto.categoryId = parseInt(updateItemDto.categoryId);
     return this.itemsService.update(+id, updateItemDto, file);
   }
 
