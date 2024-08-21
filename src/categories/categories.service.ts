@@ -29,10 +29,14 @@ export class CategoriesService {
       // Add the file URL to the DTO
       createCategoryDto.icon = fileUrl;
     }
-
-    return this.datbaseService.category.create({
-      data: createCategoryDto,
-    });
+    try {
+      const category = this.datbaseService.category.create({
+        data: createCategoryDto,
+      });
+      return category;
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   findAll() {
