@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
 import { CreateReservationWithCustomerDto } from './dto/create-reservation.dto';
@@ -56,11 +56,22 @@ export class ReservatonService {
   }
 
   async findOne(id: number) {
-    return await this.databaseService.reservation.findFirst({
-      where: {
-        id,
-      },
-    });
+    try {
+      const reservation = await this.databaseService.reservation.findFirst({
+        where: {
+          id,
+        },
+      });
+      if (!reservation) {
+        throw new NotFoundException('reservation not found ', {
+          cause: new Error(),
+          description: 'Some error description',
+        });
+      }
+      return reservation;
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   async remove(id: number) {
