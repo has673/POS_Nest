@@ -83,7 +83,7 @@ model Reservation {
 
 model Customer {
   id          Int       @id @default(autoincrement())
-  title       String
+  title       String?
   fullName    String
   phoneNumber String
   emailAddress String
