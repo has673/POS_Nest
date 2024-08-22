@@ -5,6 +5,10 @@ export class CheckSlotAvailabilityDto {
   @IsNotEmpty()
   tableNumber: number;
 
+  @IsInt()
+  @IsNotEmpty()
+  floor: number;
+
   @IsDate()
   @IsNotEmpty()
   reservationDate: Date;

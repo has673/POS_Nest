@@ -9,29 +9,60 @@ import { UpdateReservationDto } from './dto/update-reservation.dto';
 export class ReservatonService {
   constructor(private readonly databaseService: DatabaseService) {}
 
+  // async createWithCustomer(
+  //   createReservationWithCustomerDto: CreateReservationWithCustomerDto,
+  // ) {
+  //   try {
+  //     const { customer, reservation } = createReservationWithCustomerDto;
+  //     const { emailAddress } = customer;
+  //     const existingCustomer = await this.findCustomer(emailAddress);
+  //     if (!existingCustomer) {
+  //       const newCustomer = await this.databaseService.customer.create({
+  //         data: customer,
+  //       });
+  //     }
+
+  //     const newReservation = await this.databaseService.reservation.create({
+  //       data: {
+  //         ...reservation,
+  //         customerId: existingCustomer.id,
+  //       },
+  //     });
+
+  //     return { existingCustomer, newReservation };
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }
   async createWithCustomer(
     createReservationWithCustomerDto: CreateReservationWithCustomerDto,
   ) {
     try {
       const { customer, reservation } = createReservationWithCustomerDto;
       const { emailAddress } = customer;
-      const existingCustomer = await this.findCustomer(emailAddress);
+
+      // Check if the customer already exists
+      let existingCustomer = await this.findCustomer(emailAddress);
+
+      // If the customer doesn't exist, create a new one
       if (!existingCustomer) {
-        const newCustomer = await this.databaseService.customer.create({
+        existingCustomer = await this.databaseService.customer.create({
           data: customer,
         });
       }
 
+      // Create the reservation with the customer's ID
       const newReservation = await this.databaseService.reservation.create({
         data: {
           ...reservation,
-          customerId: existingCustomer.id,
+          customerId: existingCustomer.id, // Assign the customerId here
         },
       });
 
-      return { existingCustomer, newReservation };
+      return { customer: existingCustomer, reservation: newReservation };
     } catch (err) {
-      console.log(err);
+      console.error(err);
+      throw new Error('Failed to create reservation with customer');
     }
   }
 
@@ -81,12 +112,13 @@ export class ReservatonService {
   }
 
   async findReservation(createReservationDto: CheckSlotAvailabilityDto) {
-    const { tableNumber, reservationDate, reservationTime } =
+    const { tableNumber, reservationDate, reservationTime, floor } =
       createReservationDto;
 
     const existingReservations =
-      await this.databaseService.reservation.findMany({
+      await this.databaseService.reservation.findFirst({
         where: {
+          floor,
           tableNumber,
           reservationDate,
           reservationTime,

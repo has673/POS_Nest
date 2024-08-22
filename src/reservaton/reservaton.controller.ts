@@ -1,4 +1,14 @@
-import { Controller, Post,Body,ConflictException, InternalServerErrorException, Get, Put , Delete ,Param} from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  ConflictException,
+  InternalServerErrorException,
+  Get,
+  Put,
+  Delete,
+  Param,
+} from '@nestjs/common';
 import { ReservatonService } from './reservaton.service';
 import { CreateReservationWithCustomerDto } from './dto/create-reservation.dto';
 import { CheckSlotAvailabilityDto } from './dto/check_availability.dto';
@@ -6,67 +16,76 @@ import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { SkipThrottle } from '@nestjs/throttler';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
-
-
-
 @ApiTags('Reservation')
-
 @Controller('reservaton')
 export class ReservatonController {
   constructor(private readonly reservatonService: ReservatonService) {}
 
   @Post()
- async  createWithCustomer(@Body() createReservationWithCustomerDto: CreateReservationWithCustomerDto) {
-  const { reservation } = createReservationWithCustomerDto;
-  const { tableNumber, reservationDate, reservationTime } = reservation;
+  async createWithCustomer(
+    @Body() createReservationWithCustomerDto: CreateReservationWithCustomerDto,
+  ) {
+    const { reservation } = createReservationWithCustomerDto;
+    const { tableNumber, reservationDate, reservationTime, floor } =
+      reservation;
 
-  // Prepare details to check availability
-  const checkSlotAvailabilityDto: CheckSlotAvailabilityDto = {
-    tableNumber,
-    reservationDate,
-    reservationTime
-  };
+    // Prepare details to check availability
+    const checkSlotAvailabilityDto: CheckSlotAvailabilityDto = {
+      tableNumber,
+      floor,
+      reservationDate,
+      reservationTime,
+    };
 
-  // Check if the reservation slot is available
-  const isAvailable = await this.reservatonService.findReservation(checkSlotAvailabilityDto);
+    // Check if the reservation slot is available
+    const isAvailable = await this.reservatonService.findReservation(
+      checkSlotAvailabilityDto,
+    );
 
-  if (!isAvailable) {
-    throw new ConflictException('The selected slot is already taken. Please choose a different time or table.');
-   
+    if (!isAvailable) {
+      throw new ConflictException(
+        'The selected slot is already taken. Please choose a different time or table.',
+      );
+    }
+
+    try {
+      // Create reservation if slot is available
+      const result = await this.reservatonService.createWithCustomer(
+        createReservationWithCustomerDto,
+      );
+      return result;
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'An error occurred while creating the reservation.',
+      );
+    }
   }
 
-  try {
-    // Create reservation if slot is available
-    const result = await this.reservatonService.createWithCustomer(createReservationWithCustomerDto);
-    return result;
-  } catch (error) {
-    throw new InternalServerErrorException('An error occurred while creating the reservation.');
+  @SkipThrottle()
+  @Get()
+  async findAll() {
+    return await this.reservatonService.findAll();
   }
-}
 
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    const idNumber = parseInt(id, 10);
 
-@SkipThrottle()
-@Get()
-async findAll(){
-  return await this.reservatonService.findAll()
-}
+    return await this.reservatonService.findOne(idNumber);
+  }
 
-@Get(':id')
-async findOne(@Param('id')  id:string){
-  const idNumber = parseInt(id, 10);
+  @Put(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() UpdateReservationDto: UpdateReservationDto,
+  ) {
+    const idNumber = parseInt(id, 10);
+    return await this.reservatonService.update(idNumber, UpdateReservationDto);
+  }
 
-  return await this.reservatonService.findOne(idNumber)
-}
-
-@Put(':id')
-async update(@Param('id') id:string, @Body()  UpdateReservationDto:UpdateReservationDto){
-  const idNumber = parseInt(id, 10);
-  return await this.reservatonService.update(idNumber,UpdateReservationDto)
-}
-
-@Delete(":id")
-async delete(@Param('id') id:string){
-  const idNumber = parseInt(id, 10);
- return  await this.reservatonService.remove(idNumber)
-}
+  @Delete(':id')
+  async delete(@Param('id') id: string) {
+    const idNumber = parseInt(id, 10);
+    return await this.reservatonService.remove(idNumber);
+  }
 }
