@@ -83,9 +83,16 @@ export class ReservatonService {
   }
 
   async remove(id: number) {
-    return await this.databaseService.reservation.delete({
-      where: { id },
-    });
+    try {
+      const reservation = await this.databaseService.reservation.delete({
+        where: { id },
+      });
+      if (!reservation) {
+        console.log('reservation no found');
+      }
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   async findReservation(createReservationDto: CheckSlotAvailabilityDto) {

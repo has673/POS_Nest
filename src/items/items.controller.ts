@@ -41,7 +41,7 @@ export class ItemsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: number) {
     return this.itemsService.findOne(+id);
   }
 
@@ -60,5 +60,10 @@ export class ItemsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.itemsService.remove(+id);
+  }
+
+  @Get('items/count')
+  getCount() {
+    return this.itemsService.getCount();
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 // import { CreateItemDto } from './dto/create-item.dto';
 // import { UpdateItemDto } from './dto/update-item.dto';
 import { DatabaseService } from 'src/database/database.service';
@@ -42,12 +42,29 @@ export class ItemsService {
     return this.datbaseService.menuItem.findMany();
   }
 
-  findOne(id: number) {
-    return this.datbaseService.menuItem.findFirst({
-      where: {
-        id,
-      },
-    });
+  async findOne(id: number) {
+    try {
+      const item = await this.datbaseService.menuItem.findFirst({
+        where: {
+          id,
+        },
+      });
+      if (!item) {
+        console.log('item not found');
+      }
+      return item;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async getCount(): Promise<number> {
+    try {
+      const count = await this.datbaseService.menuItem.count();
+      return count;
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   async update(
@@ -92,6 +109,9 @@ export class ItemsService {
           id,
         },
       });
+      if (!item) {
+        console.log('item not found');
+      }
     } catch (err) {
       console.log(err);
     }
