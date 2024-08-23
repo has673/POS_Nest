@@ -4,36 +4,10 @@ import { DatabaseService } from 'src/database/database.service';
 import { CreateReservationWithCustomerDto } from './dto/create-reservation.dto';
 import { CheckSlotAvailabilityDto } from './dto/check_availability.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
-
 @Injectable()
 export class ReservatonService {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  // async createWithCustomer(
-  //   createReservationWithCustomerDto: CreateReservationWithCustomerDto,
-  // ) {
-  //   try {
-  //     const { customer, reservation } = createReservationWithCustomerDto;
-  //     const { emailAddress } = customer;
-  //     const existingCustomer = await this.findCustomer(emailAddress);
-  //     if (!existingCustomer) {
-  //       const newCustomer = await this.databaseService.customer.create({
-  //         data: customer,
-  //       });
-  //     }
-
-  //     const newReservation = await this.databaseService.reservation.create({
-  //       data: {
-  //         ...reservation,
-  //         customerId: existingCustomer.id,
-  //       },
-  //     });
-
-  //     return { existingCustomer, newReservation };
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }
   async createWithCustomer(
     createReservationWithCustomerDto: CreateReservationWithCustomerDto,
   ) {
@@ -76,12 +50,15 @@ export class ReservatonService {
     });
   }
 
-  async update(id: number, UpdateReservationDto: UpdateReservationDto) {
+  async update(
+    id: number,
+    updateReservationDto: Prisma.ReservationUpdateInput,
+  ) {
     const res = await this.databaseService.reservation.update({
       where: {
         id,
       },
-      data: UpdateReservationDto,
+      data: updateReservationDto,
     });
     return res;
   }

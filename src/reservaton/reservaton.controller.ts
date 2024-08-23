@@ -12,9 +12,9 @@ import {
 import { ReservatonService } from './reservaton.service';
 import { CreateReservationWithCustomerDto } from './dto/create-reservation.dto';
 import { CheckSlotAvailabilityDto } from './dto/check_availability.dto';
-import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { SkipThrottle } from '@nestjs/throttler';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Prisma } from '@prisma/client';
 
 @ApiTags('Reservation')
 @Controller('reservaton')
@@ -77,7 +77,7 @@ export class ReservatonController {
   @Put(':id')
   async update(
     @Param('id') id: string,
-    @Body() UpdateReservationDto: UpdateReservationDto,
+    @Body() UpdateReservationDto: Prisma.ReservationUpdateInput,
   ) {
     const idNumber = parseInt(id, 10);
     return await this.reservatonService.update(idNumber, UpdateReservationDto);
