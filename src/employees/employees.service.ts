@@ -27,23 +27,27 @@ export class EmployeesService {
     createEmployeeDto: Prisma.EmployeeCreateInput,
     file?: Express.Multer.File,
   ) {
-    if (file) {
-      // Generate a unique key for the S3 bucket
-      const bucketKey = `${file.fieldname}-${Date.now()}`;
+    try {
+      if (file) {
+        // Generate a unique key for the S3 bucket
+        const bucketKey = `${file.fieldname}-${Date.now()}`;
 
-      // Upload the file to S3 and get the file URL
-      const fileUrl = await this.s3Service.uploadFile(file, bucketKey);
+        // Upload the file to S3 and get the file URL
+        const fileUrl = await this.s3Service.uploadFile(file, bucketKey);
 
-      // Include the file URL in the employee data
-      createEmployeeDto.profilePicture = fileUrl;
+        // Include the file URL in the employee data
+        createEmployeeDto.profilePicture = fileUrl;
+      }
+
+      const emp = await this.datbaseService.employee.create({
+        data: createEmployeeDto,
+      });
+
+      this.eventsGateway.sendMessage(`Employee created: ${emp.Name}`);
+      return emp;
+    } catch (err) {
+      console.log(err);
     }
-
-    const emp = await this.datbaseService.employee.create({
-      data: createEmployeeDto,
-    });
-
-    this.eventsGateway.sendMessage(`Employee created: ${emp.Name}`);
-    return emp;
   }
 
   async findAll() {
@@ -51,11 +55,20 @@ export class EmployeesService {
   }
 
   async findOne(id: number) {
-    return this.datbaseService.employee.findUnique({
-      where: {
-        id,
-      },
-    });
+    try {
+      const emp = this.datbaseService.employee.findUnique({
+        where: {
+          id,
+        },
+      });
+
+      if (!emp) {
+        console.log('no employee found');
+      }
+      return emp;
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   async update(id: number, updateEmployeeDto: Prisma.EmployeeUpdateInput) {
@@ -74,12 +87,19 @@ export class EmployeesService {
   }
 
   async remove(id: number) {
-    const emp = this.datbaseService.employee.delete({
-      where: {
-        id,
-      },
-    });
-    this.eventsGateway.sendMessage(`Employee deleted: ${(await emp).Name}`);
-    return emp;
+    try {
+      const emp = this.datbaseService.employee.delete({
+        where: {
+          id,
+        },
+      });
+      this.eventsGateway.sendMessage(`Employee deleted: ${(await emp).Name}`);
+      if (!emp) {
+        console.log('employee not found');
+      }
+      return emp;
+    } catch (err) {
+      console.log(err);
+    }
   }
 }
