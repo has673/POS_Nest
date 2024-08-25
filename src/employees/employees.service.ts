@@ -103,8 +103,17 @@ export class EmployeesService {
       console.log(err);
     }
   }
-  async attendance(id: number, addAtteendanceDto: AddAttendanceDto) {
+  async attendance(employeeId: number, addAttendanceDto: AddAttendanceDto) {
     try {
+      const { employeeId, status, date } = addAttendanceDto;
+      const attendance = await this.datbaseService.attendance.create({
+        data: {
+          employeeId,
+          status,
+          date,
+        },
+      });
+      return attendance;
     } catch (err) {
       console.log(err);
     }

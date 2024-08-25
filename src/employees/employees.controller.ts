@@ -69,16 +69,16 @@ export class EmployeesController {
 
   @Patch(':id')
   async addAttendance(
-    @Param('id') id: string,
+    @Param('id') employeeId: string,
     @Body() addAtteendanceDto: AddAttendanceDto,
   ) {
     try {
-      const employee = await this.employeesService.findOne(+id);
+      const employee = await this.employeesService.findOne(+employeeId);
       if (!employee) {
         throw new NotFoundException('employee not found');
       }
       const attendance = this.employeesService.attendance(
-        +id,
+        +employeeId,
         addAtteendanceDto,
       );
       return attendance;
