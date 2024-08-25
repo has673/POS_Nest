@@ -6,6 +6,7 @@ import { Request } from 'express';
 import { Express } from 'express';
 import { EventsGateway } from '../events/events.gateway';
 import { S3Service } from 'src/s3/s3.service';
+import { AddAttendanceDto } from './dto/add-attendance.dto';
 @Injectable()
 export class EmployeesService {
   constructor(
@@ -98,6 +99,12 @@ export class EmployeesService {
         console.log('employee not found');
       }
       return emp;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  async attendance(id: number, addAtteendanceDto: AddAttendanceDto) {
+    try {
     } catch (err) {
       console.log(err);
     }

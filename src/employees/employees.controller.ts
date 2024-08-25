@@ -8,6 +8,7 @@ import {
   Delete,
   Req,
   UseGuards,
+  NotFoundException,
 } from '@nestjs/common';
 import { EmployeesService } from './employees.service';
 import { Prisma } from '@prisma/client';
@@ -20,6 +21,7 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { RolesGuard } from '../common/roles/role.guard';
 import { Public } from 'src/common/decorators/public.decorator';
 import { S3Service } from 'src/s3/s3.service';
+import { AddAttendanceDto } from './dto/add-attendance.dto';
 
 @ApiTags('Employees')
 @Controller('employees')
@@ -63,5 +65,25 @@ export class EmployeesController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.employeesService.remove(+id);
+  }
+
+  @Patch(':id')
+  async addAttendance(
+    @Param('id') id: string,
+    @Body() addAtteendanceDto: AddAttendanceDto,
+  ) {
+    try {
+      const employee = await this.employeesService.findOne(+id);
+      if (!employee) {
+        throw new NotFoundException('employee not found');
+      }
+      const attendance = this.employeesService.attendance(
+        +id,
+        addAtteendanceDto,
+      );
+      return attendance;
+    } catch (err) {
+      console.log(err);
+    }
   }
 }
