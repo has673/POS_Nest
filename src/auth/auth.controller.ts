@@ -19,7 +19,7 @@ import { UpdateAuthDto } from './dto/update-auth.dto';
 import { Prisma } from '@prisma/client';
 import { Request } from 'express';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-
+import { CreateUserDto } from './dto/create-user.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -87,16 +87,20 @@ export class AuthController {
 
   @Put(':id')
   async updateProfile(
-  @Param('id') id: string, 
-  @Req() req: Request,
-  @Body() UpdateAuthDto: UpdateAuthDto) {
+    @Param('id') id: string,
+    @Req() req: Request,
+    @Body() UpdateAuthDto: UpdateAuthDto,
+  ) {
     const userIdFromParam = parseInt(id);
     const userIdFromToken = req['user']?.userId;
     console.log(req['user']);
     if (userIdFromParam !== userIdFromToken) {
       throw new UnauthorizedException('You can only update your own profile');
     }
-    return await this.authService.updateProfile(userIdFromParam,UpdateAuthDto)
-     
+    return await this.authService.updateProfile(userIdFromParam, UpdateAuthDto);
+  }
+  @Post()
+  async createUser(@Body() createUserDto: CreateUserDto) {
+    return this.authService.createUser(createUserDto);
   }
 }

@@ -112,4 +112,21 @@ export class CategoriesService {
     });
     return category ? category.menuItems : [];
   }
+
+  async countItems() {
+    try {
+      const count = await this.datbaseService.category.findFirst({
+        include: {
+          _count: {
+            select: {
+              menuItems: true,
+            },
+          },
+        },
+      });
+      return count;
+    } catch (err) {
+      console.log(err);
+    }
+  }
 }

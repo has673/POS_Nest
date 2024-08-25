@@ -1,4 +1,10 @@
-import { Injectable, Param, Body, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  Param,
+  Body,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
@@ -7,12 +13,12 @@ import * as dayjs from 'dayjs';
 // import { AwsConfigService } from '../../aws-config/aws-config.service';
 import { DatabaseService } from 'src/database/database.service';
 import { UpdateAuthDto } from './dto/update-auth.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 import { Express } from 'express';
 import { S3Service } from 'src/s3/s3.service';
 
 @Injectable()
 export class AuthService {
-
   private transporter = nodemailer.createTransport({
     host: 'smtp.mailtrap.io',
     port: 587,
@@ -24,7 +30,7 @@ export class AuthService {
 
   constructor(
     private readonly databaseService: DatabaseService,
-    private readonly s3Service: S3Service
+    private readonly s3Service: S3Service,
   ) {}
 
   // Temporary method for file upload
@@ -83,10 +89,14 @@ export class AuthService {
     return await this.databaseService.user.findUnique({ where: { email } });
   }
 
-  async login(createAuthDto: Prisma.UserCreateInput): Promise<{ token: string }> {
+  async login(
+    createAuthDto: Prisma.UserCreateInput,
+  ): Promise<{ token: string }> {
     const { email, password } = createAuthDto;
 
-    const user = await this.databaseService.user.findFirst({ where: { email } });
+    const user = await this.databaseService.user.findFirst({
+      where: { email },
+    });
 
     if (!user) {
       throw new BadRequestException('Invalid email');
@@ -98,16 +108,22 @@ export class AuthService {
       throw new BadRequestException('Invalid username or password');
     }
 
-    const token = jwt.sign({ userId: user.id, email: user.email, role: user.role }, 
-      process.env.JWT_SECRET, 
-      { expiresIn: '1h' }
+    const token = jwt.sign(
+      { userId: user.id, email: user.email, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' },
     );
 
     return { token };
   }
 
-  async recoverPassword(email: string, password: string): Promise<{ email: string; username: string }> {
-    const user = await this.databaseService.user.findFirst({ where: { email } });
+  async recoverPassword(
+    email: string,
+    password: string,
+  ): Promise<{ email: string; username: string }> {
+    const user = await this.databaseService.user.findFirst({
+      where: { email },
+    });
 
     if (!user) {
       throw new BadRequestException('Invalid user');
@@ -115,7 +131,7 @@ export class AuthService {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-   const updated =  await this.databaseService.user.update({
+    const updated = await this.databaseService.user.update({
       where: { email },
       data: {
         password: hashedPassword,
@@ -123,11 +139,13 @@ export class AuthService {
       },
     });
 
-    return updated
+    return updated;
   }
 
   async verifyOtp(email: string, otp: number): Promise<void> {
-    const user = await this.databaseService.user.findUnique({ where: { email } });
+    const user = await this.databaseService.user.findUnique({
+      where: { email },
+    });
 
     if (!user || user.OTP !== otp) {
       throw new BadRequestException('Invalid OTP');
@@ -194,18 +212,18 @@ export class AuthService {
   async update(id: number, file?: Express.Multer.File): Promise<User> {
     // Find the user by ID
     const user = await this.databaseService.user.findUnique({ where: { id } });
-  
+
     if (!user) {
       throw new NotFoundException('User not found');
     }
-  
+
     if (file) {
       // Generate a unique key for the S3 bucket
       const bucketKey = `${file.fieldname}-${Date.now()}`;
-      
+
       // Upload the file to S3 and get the file URL
       const fileUrl = await this.s3Service.uploadFile(file, bucketKey);
-      
+
       // Update the user's profile picture with the file URL
       const updatedUser = await this.databaseService.user.update({
         where: { id }, // Specify the user to update
@@ -213,27 +231,27 @@ export class AuthService {
           profilePicture: fileUrl, // Update the profile picture with the S3 URL
         },
       });
-  
+
       return updatedUser; // Return the updated user
     }
-  
+
     throw new BadRequestException('No file provided');
   }
 
-  async updateProfile(id: number, updateAuthDto:UpdateAuthDto){
+  async updateProfile(id: number, updateAuthDto: UpdateAuthDto) {
     // Find the user by ID
     const user = await this.databaseService.user.findUnique({ where: { id } });
     if (!user) {
       throw new NotFoundException('User not found');
     }
-      const updatedUser = await this.databaseService.user.update({
-        where: { id }, // Specify the user to update
-        data: {
-           ...updateAuthDto
-        },
-      });
-      return updatedUser; 
-;
+    const updatedUser = await this.databaseService.user.update({
+      where: { id }, // Specify the user to update
+      data: {
+        ...updateAuthDto,
+      },
+    });
+    return updatedUser;
   }
 
+  async createUser(createUserDto: CreateUserDto) {}
 }

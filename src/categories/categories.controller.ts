@@ -57,4 +57,9 @@ export class CategoriesController {
   findMenu(@Param('id') id: string) {
     return this.categoriesService.findmenu(+id);
   }
+
+  @Get('catgeory/count')
+  findCount() {
+    return this.categoriesService.countItems();
+  }
 }
