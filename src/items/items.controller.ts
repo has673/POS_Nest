@@ -15,6 +15,8 @@ import { Prisma } from '@prisma/client';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { S3Service } from 'src/s3/s3.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { UpdateMenuItemDto } from './dto/update-item.dto';
+import { CreateItemDto } from './dto/create-item.dto';
 
 @ApiTags('Items')
 @Controller('items')
@@ -27,11 +29,11 @@ export class ItemsController {
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   create(
-    @Body() createItemDto: any,
+    @Body() createItemDto: CreateItemDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    createItemDto.price = parseInt(createItemDto.price);
-    createItemDto.categoryId = parseInt(createItemDto.categoryId);
+    // createItemDto.price = parseInt(createItemDto.price);
+    // createItemDto.categoryId = parseInt(createItemDto.categoryId);
     return this.itemsService.create(createItemDto, file);
   }
 
@@ -49,11 +51,9 @@ export class ItemsController {
   @UseInterceptors(FileInterceptor('file'))
   update(
     @Param('id') id: string,
-    @Body() updateItemDto: any,
+    @Body() updateItemDto: UpdateMenuItemDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    updateItemDto.price = parseInt(updateItemDto.price);
-    updateItemDto.categoryId = parseInt(updateItemDto.categoryId);
     return this.itemsService.update(+id, updateItemDto, file);
   }
 

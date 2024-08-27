@@ -4,6 +4,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { Prisma } from '@prisma/client';
 import { S3Service } from 'src/s3/s3.service';
+import { UpdateMenuItemDto } from './dto/update-item.dto';
+import { CreateItemDto } from './dto/create-item.dto';
 
 @Injectable()
 export class ItemsService {
@@ -12,10 +14,7 @@ export class ItemsService {
     private readonly s3Service: S3Service,
   ) {}
 
-  async create(
-    createItemDto: Prisma.MenuItemCreateInput,
-    file?: Express.Multer.File,
-  ) {
+  async create(createItemDto: CreateItemDto, file?: Express.Multer.File) {
     if (!file) {
       console.debug('No file uploaded');
     } else {
@@ -69,7 +68,7 @@ export class ItemsService {
 
   async update(
     id: number,
-    updateItemDto: Prisma.MenuItemUpdateInput,
+    updateItemDto: UpdateMenuItemDto,
     file?: Express.Multer.File,
   ) {
     if (!file) {
