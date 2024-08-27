@@ -254,4 +254,13 @@ export class AuthService {
   }
 
   async createUser(createUserDto: CreateUserDto) {}
+
+  async getUsers() {
+    try {
+      const users = await this.databaseService.user.findMany();
+      return users;
+    } catch (err) {
+      return err;
+    }
+  }
 }

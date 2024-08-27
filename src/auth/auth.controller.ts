@@ -20,6 +20,7 @@ import { Prisma } from '@prisma/client';
 import { Request } from 'express';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
+import { SkipThrottle } from '@nestjs/throttler';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -102,5 +103,10 @@ export class AuthController {
   @Post()
   async createUser(@Body() createUserDto: CreateUserDto) {
     return this.authService.createUser(createUserDto);
+  }
+  @SkipThrottle()
+  @Get()
+  async getUser() {
+    return this.authService.getUsers();
   }
 }
