@@ -58,10 +58,11 @@ export class AuthController {
   @Get(':id')
   async getProfile(@Param('id') id: string, @Req() req: Request) {
     console.log(req.url, ' ', req.headers['authorization']);
-    const userIdFromParam = parseInt(id);
     const userIdFromToken = req['user']?.userId;
+    console.debug(userIdFromToken);
+    const userId = parseInt(id);
     console.log(req['user']);
-    if (userIdFromParam !== userIdFromToken) {
+    if (userId !== userIdFromToken) {
       throw new UnauthorizedException('You can only update your own profile');
     }
 
@@ -92,13 +93,16 @@ export class AuthController {
     @Req() req: Request,
     @Body() UpdateAuthDto: UpdateAuthDto,
   ) {
-    const userIdFromParam = parseInt(id);
+    // const userIdFromParam = parseInt(id);
+    // const userIdFromToken = req['user']?.userId;
+    console.log(req.url, ' ', req.headers['authorization']);
     const userIdFromToken = req['user']?.userId;
-    console.log(req['user']);
-    if (userIdFromParam !== userIdFromToken) {
+    console.debug(userIdFromToken);
+    const userId = parseInt(id);
+    if (userId !== userIdFromToken) {
       throw new UnauthorizedException('You can only update your own profile');
     }
-    return await this.authService.updateProfile(userIdFromParam, UpdateAuthDto);
+    return await this.authService.updateProfile(userId, UpdateAuthDto);
   }
   @Post()
   async createUser(@Body() createUserDto: CreateUserDto) {

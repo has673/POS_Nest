@@ -15,6 +15,7 @@ model User {
   email         String    @unique
   role          Role?
   OTP           Int?
+  address       String?
   otpExpiry     DateTime? // New field for OTP expiry time
   verified      Boolean?  @default(false)
   profilePicture String? // Optional field for profile picture URL
