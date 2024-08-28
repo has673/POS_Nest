@@ -67,13 +67,14 @@ export class EmployeesController {
     return this.employeesService.remove(+id);
   }
 
-  @Patch(':id')
+  @Patch(':id/attendance')
   async addAttendance(
     @Param('id') employeeId: string,
     @Body() addAtteendanceDto: AddAttendanceDto,
   ) {
     try {
-      const employee = await this.employeesService.findOne(+employeeId);
+      const id = parseInt(employeeId);
+      const employee = await this.employeesService.findOne(+id);
       if (!employee) {
         throw new NotFoundException('employee not found');
       }
@@ -85,5 +86,12 @@ export class EmployeesController {
     } catch (err) {
       console.log(err);
     }
+  }
+
+  @Get('get/attendance')
+  @Public()
+  @ApiOperation({ summary: 'Get all users' })
+  findAttendance(@Req() req: Request) {
+    return this.employeesService.findAttendance();
   }
 }

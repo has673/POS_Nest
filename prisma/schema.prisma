@@ -18,6 +18,11 @@ model User {
   address       String?
   otpExpiry     DateTime? // New field for OTP expiry time
   verified      Boolean?  @default(false)
+
+  allowReservation Boolean? @default(false)
+  allowStaffModify  Boolean?      @default(false)
+ allowCategoryModify  Boolean?      @default(false)
+
   profilePicture String? // Optional field for profile picture URL
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -100,8 +105,9 @@ model Inventory {
   name        String
   categoryId  Int
   category    Category  @relation(fields: [categoryId], references: [id])
-  quantity    Int
+
   stock       Stock
+
   status      Status
   price       Float
   perishable  Ans  
@@ -138,7 +144,7 @@ model OrderItem {
 model Attendance {
   id          Int            @id @default(autoincrement())
   date        DateTime       // Date of the attendance record
-  status      AttendanceStatus // Enum field for attendance status
+  status      AttendanceStatus @default(ABSENT)
   employeeId  Int            // Foreign key field
   employee    Employee       @relation(fields: [employeeId], references: [id]) // Relation field to Employee model
 

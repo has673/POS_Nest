@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { DatabaseService } from 'src/database/database.service';
@@ -59,15 +59,29 @@ export class OrderService {
   }
 
   async findAll() {
-    return await this.databaseService.order.findMany();
+    try {
+      const order = await this.databaseService.order.findMany();
+      return order;
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   async findOne(id: number) {
-    return await this.databaseService.order.findFirst({
-      where: {
-        id,
-      },
-    });
+    try {
+      const order = await this.databaseService.order.findFirst({
+        where: {
+          id,
+        },
+      });
+      if (!id) {
+        console.log('order not found');
+      }
+
+      return order;
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   async remove(id: number) {

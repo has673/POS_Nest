@@ -103,17 +103,45 @@ export class EmployeesService {
       console.log(err);
     }
   }
-  async attendance(employeeId: number, addAttendanceDto: AddAttendanceDto) {
+  async attendance(id: number, addAttendanceDto: AddAttendanceDto) {
     try {
-      const { employeeId, status, date } = addAttendanceDto;
+      const { status, date } = addAttendanceDto;
+      const attendanceDate = date || new Date();
       const attendance = await this.datbaseService.attendance.create({
         data: {
-          employeeId,
+          employeeId: id,
           status,
-          date,
+          date: attendanceDate,
         },
       });
       return attendance;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async findAttendance() {
+    try {
+      const currentDate = new Date();
+      // Set the time to midnight to ensure we get attendances for the whole day
+      currentDate.setHours(0, 0, 0, 0);
+
+      const employees = await this.datbaseService.employee.findMany({
+        select: {
+          id: true,
+          Name: true,
+          attendances: {
+            where: {
+              date: {
+                gte: currentDate, // Attendances on or after the start of the current day
+                lt: new Date(currentDate.getTime() + 24 * 60 * 60 * 1000), // Attendances before the end of the current day
+              },
+            },
+          },
+        },
+      });
+
+      return employees;
     } catch (err) {
       console.log(err);
     }

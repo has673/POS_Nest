@@ -109,7 +109,13 @@ export class AuthService {
     }
 
     const token = jwt.sign(
-      { userId: user.id, email: user.email, role: user.role },
+      {
+        userId: user.id,
+        email: user.email,
+        role: user.role,
+        allowStaff: user.allowStaffModify,
+        allowCategory: user.allowCategoryModify,
+      },
       process.env.JWT_SECRET,
       { expiresIn: '1h' },
     );
