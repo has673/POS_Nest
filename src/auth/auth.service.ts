@@ -16,6 +16,7 @@ import { UpdateAuthDto } from './dto/update-auth.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Express } from 'express';
 import { S3Service } from 'src/s3/s3.service';
+import { ChangeAccessDto } from './dto/change-acces.dto';
 
 @Injectable()
 export class AuthService {
@@ -273,6 +274,29 @@ export class AuthService {
       return users;
     } catch (err) {
       return err;
+    }
+  }
+  async modifyAccess(id: number, changeAccessDto: ChangeAccessDto) {
+    try {
+      const user = await this.databaseService.user.findUnique({
+        where: {
+          id,
+        },
+      });
+      if (!user) {
+        throw new NotFoundException('user does not exist');
+      }
+      const updateUser = await this.databaseService.user.update({
+        where: {
+          id,
+        },
+        data: {
+          ...changeAccessDto,
+        },
+      });
+      return updateUser;
+    } catch (err) {
+      console.log(err);
     }
   }
 }
