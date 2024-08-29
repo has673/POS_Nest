@@ -76,6 +76,7 @@ model Reservation {
   paxNumber       String?
   reservationDate DateTime
   reservationTime DateTime
+  reservationEndTime DateTime?
   depositFee      Float
   status          String
   floor           Int 
