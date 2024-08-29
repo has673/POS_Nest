@@ -72,6 +72,8 @@ export class AppModule {
       { path: 'auth/:id/*', method: RequestMethod.PATCH },
       { path: 'auth/:id', method: RequestMethod.PUT },
       { path: 'auth/:id', method: RequestMethod.GET },
+      { path: 'auth', method: RequestMethod.GET },
+      { path: 'auth/userData/get', method: RequestMethod.GET },
     );
   }
 }

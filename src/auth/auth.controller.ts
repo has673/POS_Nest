@@ -75,6 +75,17 @@ export class AuthController {
     return await this.authService.getProfile(userIdFromToken);
   }
 
+  @Get('userdata/get')
+  async getUserData(@Req() req: Request) {
+    console.log(req.url, ' ', req.headers['authorization']);
+    try {
+      const user = req['user'];
+      return user;
+      console.log(user);
+    } catch (err) {
+      console.log(err);
+    }
+  }
   @Patch(':id')
   @UseInterceptors(FileInterceptor('file'))
   async update(
