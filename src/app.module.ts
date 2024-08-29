@@ -64,7 +64,7 @@ export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(AuthMiddleware).forRoutes(
       { path: 'employees', method: RequestMethod.GET },
-      // { path: 'employees', method: RequestMethod.PUT },
+      { path: 'categories', method: RequestMethod.GET },
       // { path: 'employees/:id', method: RequestMethod.GET },
       // { path: 'reservaton', method: RequestMethod.ALL },
       { path: 'reservaton/:id', method: RequestMethod.GET },

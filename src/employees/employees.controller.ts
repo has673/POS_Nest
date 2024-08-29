@@ -22,6 +22,7 @@ import { RolesGuard } from '../common/roles/role.guard';
 import { Public } from 'src/common/decorators/public.decorator';
 import { S3Service } from 'src/s3/s3.service';
 import { AddAttendanceDto } from './dto/add-attendance.dto';
+import { StaffModifyGuard } from 'src/common/roles/guards/staff.guard';
 
 @ApiTags('Employees')
 @Controller('employees')
@@ -39,6 +40,7 @@ export class EmployeesController {
     return emp;
   }
 
+  @UseGuards(StaffModifyGuard)
   @Get()
   @Public()
   @ApiOperation({ summary: 'Get all users' })

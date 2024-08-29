@@ -8,12 +8,14 @@ import {
   Delete,
   UseInterceptors,
   UploadedFile,
+  UseGuards,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { Prisma } from '@prisma/client';
 
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { CategoryModifyGuard } from 'src/common/roles/guards/category.guard';
 
 @ApiTags('Categories')
 @Controller('categories')
@@ -29,6 +31,7 @@ export class CategoriesController {
     return this.categoriesService.create(createCategoryDto, file);
   }
 
+  @UseGuards(CategoryModifyGuard)
   @Get()
   findAll() {
     return this.categoriesService.findAll();
