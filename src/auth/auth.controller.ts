@@ -11,6 +11,7 @@ import {
   UnauthorizedException,
   UploadedFile,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthService } from './auth.service';
@@ -21,8 +22,13 @@ import { Request } from 'express';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { SkipThrottle } from '@nestjs/throttler';
+import { ChangeAccessDto } from './dto/change-acces.dto';
+import { RolesGuard } from 'src/common/roles/role.guard';
+import { Roles } from 'src/common/roles/role.decorator';
+import { Role } from 'src/common/roles/role.enum';
 
 @ApiTags('Auth')
+@UseGuards(RolesGuard)
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -112,5 +118,14 @@ export class AuthController {
   @Get()
   async getUser() {
     return this.authService.getUsers();
+  }
+
+  @Patch(':id/acceschange')
+  @Roles(Role.ADMIN)
+  async changeAccess(
+    @Body() changeAccess: ChangeAccessDto,
+    @Param('id') id: number,
+  ) {
+    return this.authService.modifyAccess(+id, changeAccess);
   }
 }

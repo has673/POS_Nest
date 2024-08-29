@@ -69,7 +69,7 @@ export class AppModule {
       // { path: 'reservaton', method: RequestMethod.ALL },
       { path: 'reservaton/:id', method: RequestMethod.GET },
       { path: 'inventory', method: RequestMethod.ALL },
-      // { path: 'auth/:id', method: RequestMethod.PATCH },
+      { path: 'auth/:id/*', method: RequestMethod.PATCH },
       { path: 'auth/:id', method: RequestMethod.PUT },
       { path: 'auth/:id', method: RequestMethod.GET },
     );
