@@ -2,16 +2,18 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { DatabaseService } from 'src/database/database.service';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class OrderService {
   constructor(private readonly databaseService: DatabaseService) {}
   async create(createOrderDto: CreateOrderDto) {
     try {
-      const { orderNumber, status, customerId, orderItems } = createOrderDto;
+      const { status, customerId, orderItems } = createOrderDto;
       let totalPrice = 0;
 
       // Start a transaction
+      const orderNumber = uuidv4();
       return await this.databaseService.$transaction(async (prisma) => {
         // Create the order
         const order = await prisma.order.create({
@@ -60,7 +62,11 @@ export class OrderService {
 
   async findAll() {
     try {
-      const order = await this.databaseService.order.findMany();
+      const order = await this.databaseService.order.findMany({
+        include: {
+          orderItems: true,
+        },
+      });
       return order;
     } catch (err) {
       console.log(err);

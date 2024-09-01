@@ -294,6 +294,7 @@ export class AuthService {
           ...changeAccessDto,
         },
       });
+      console.debug('access changed');
       return updateUser;
     } catch (err) {
       console.log(err);

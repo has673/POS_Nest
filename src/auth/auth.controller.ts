@@ -131,7 +131,7 @@ export class AuthController {
     return this.authService.getUsers();
   }
 
-  @Patch(':id/acceschange')
+  @Patch(':id/accesschange')
   @Roles(Role.ADMIN)
   async changeAccess(
     @Body() changeAccess: ChangeAccessDto,

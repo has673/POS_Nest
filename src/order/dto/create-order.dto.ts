@@ -1,5 +1,11 @@
 // create-order.dto.ts
-import { IsEnum, IsInt, IsString, IsArray, ValidateNested } from 'class-validator';
+import {
+  IsEnum,
+  IsInt,
+  IsString,
+  IsArray,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { CreateOrderItemDto } from './create-order-item.dto';
 
@@ -12,9 +18,6 @@ export enum OrderStatus {
 }
 
 export class CreateOrderDto {
-  @IsString()
-  orderNumber: string;
-
   @IsEnum(OrderStatus)
   status: OrderStatus;
 
