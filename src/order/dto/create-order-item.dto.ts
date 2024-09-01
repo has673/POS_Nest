@@ -1,11 +1,12 @@
 // create-order-item.dto.ts
-import { IsInt, IsNumber } from 'class-validator';
+import { IsInt, IsNotEmpty, IsNumber } from 'class-validator';
 
 export class CreateOrderItemDto {
   @IsInt()
   quantity: number;
 
-
+  @IsNotEmpty()
+  name: string;
 
   @IsInt()
   productId: number; // This references the MenuItem id

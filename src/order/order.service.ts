@@ -37,6 +37,7 @@ export class OrderService {
               quantity: item.quantity,
               price: menuItem.price,
               orderId: order.id,
+              name: item.name,
               productId: item.productId,
             },
           });
@@ -73,6 +74,13 @@ export class OrderService {
     }
   }
 
+  async findOrders({ page = 1, limit = 10 }: { page: number; limit: number }) {
+    const skip = (page - 1) * limit;
+    return await this.databaseService.order.findMany({
+      skip,
+      take: limit,
+    });
+  }
   async findOne(id: number) {
     try {
       const order = await this.databaseService.order.findFirst({

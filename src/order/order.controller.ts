@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
@@ -17,9 +26,17 @@ export class OrderController {
     return this.orderService.findAll();
   }
 
+  @Get('page')
+  getOrders(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ) {
+    return this.orderService.findOrders({ page, limit });
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
-    const orderId = parseInt(id)
+    const orderId = parseInt(id);
     return this.orderService.findOne(+orderId);
   }
 
@@ -30,7 +47,7 @@ export class OrderController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    const orderId = parseInt(id)
+    const orderId = parseInt(id);
     return this.orderService.remove(+orderId);
   }
 }
