@@ -144,22 +144,37 @@ export class OrderService {
     }
   }
 
-  // async update(id: number, updateOrderDto: UpdateOrderDto) {
-  //   try {
-  //     const order = await this.databaseService.order.findFirst({
-  //       where: {
-  //         id,
-  //       },
-  //     });
-  //     if (!order) {
-  //       throw new NotFoundException('Not found error');
-  //     }
-  //     const updatedOder = await this.databaseService.order.update({
-  //       where: { id }, // Specify the user to update
-  //       data: updateOrderDto,
-  //     });
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }
+  async update(id: number, updateOrderDto: UpdateOrderDto) {
+    const { status, orderItems } = updateOrderDto;
+    try {
+      const order = await this.databaseService.order.findFirst({
+        where: {
+          id,
+        },
+      });
+      if (!order) {
+        throw new NotFoundException('Not found error');
+      }
+      const updatedOrder = await this.databaseService.order.update({
+        where: { id },
+        data: {
+          status,
+          orderItems: orderItems
+            ? {
+                updateMany: orderItems.map((item) => ({
+                  where: { id: item.productId }, // Ensure this matches the actual identifier for your items
+                  data: {
+                    quantity: item.quantity,
+                    name: item.name,
+                  },
+                })),
+              }
+            : undefined,
+        },
+        include: { orderItems: true },
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
 }
