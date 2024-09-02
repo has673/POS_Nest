@@ -11,6 +11,7 @@ import {
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { OrderStatus } from '@prisma/client';
 
 @Controller('order')
 export class OrderController {
@@ -52,7 +53,7 @@ export class OrderController {
   }
 
   @Get('filter/status')
-  async filterOrders(@Query('status') status: string) {
+  async filterOrders(@Query('status') status: OrderStatus) {
     return this.orderService.filterOrders(status);
   }
 }

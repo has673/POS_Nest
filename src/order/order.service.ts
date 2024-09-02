@@ -3,6 +3,7 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { DatabaseService } from 'src/database/database.service';
 import { v4 as uuidv4 } from 'uuid';
+import { OrderStatus } from '@prisma/client';
 
 @Injectable()
 export class OrderService {
@@ -123,13 +124,16 @@ export class OrderService {
     }
   }
 
-  async filterOrders(status: string) {
+  async filterOrders(status: OrderStatus) {
     try {
       if (!status) {
         throw new NotFoundException('Not found');
       }
 
-      const orders = this.databaseService.order.findMany({
+      const orders = await this.databaseService.order.findMany({
+        where: {
+          status: status,
+        },
         include: {
           orderItems: true,
         },
@@ -139,4 +143,23 @@ export class OrderService {
       console.log(err);
     }
   }
+
+  // async update(id: number, updateOrderDto: UpdateOrderDto) {
+  //   try {
+  //     const order = await this.databaseService.order.findFirst({
+  //       where: {
+  //         id,
+  //       },
+  //     });
+  //     if (!order) {
+  //       throw new NotFoundException('Not found error');
+  //     }
+  //     const updatedOder = await this.databaseService.order.update({
+  //       where: { id }, // Specify the user to update
+  //       data: updateOrderDto,
+  //     });
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }
 }
