@@ -122,4 +122,21 @@ export class OrderService {
       throw new Error(`Deletion failed: ${error.message}`);
     }
   }
+
+  async filterOrders(status: string) {
+    try {
+      if (!status) {
+        throw new NotFoundException('Not found');
+      }
+
+      const orders = this.databaseService.order.findMany({
+        include: {
+          orderItems: true,
+        },
+      });
+      return orders;
+    } catch (err) {
+      console.log(err);
+    }
+  }
 }

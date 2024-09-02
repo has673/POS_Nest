@@ -50,4 +50,9 @@ export class OrderController {
     const orderId = parseInt(id);
     return this.orderService.remove(+orderId);
   }
+
+  @Get('filter/status')
+  async filterOrders(@Query('status') status: string) {
+    return this.orderService.filterOrders(status);
+  }
 }
