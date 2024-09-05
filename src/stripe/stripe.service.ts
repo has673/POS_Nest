@@ -25,6 +25,7 @@ export class StripeService {
       const paymentIntent = await this.stripe.paymentIntents.create({
         amount: amount * 100, // Stripe expects amount in cents
         currency: 'usd',
+
         payment_method_types: ['card'],
 
         metadata: { orderId: order.id.toString() },
