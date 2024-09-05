@@ -23,6 +23,7 @@ import { Exclude } from 'class-transformer';
 import { RolesGuard } from './common/roles/role.guard';
 import { S3Module } from './s3/s3.module';
 // import { S3Module } from './s3/s3.module';
+import { StripeModule } from './stripe/stripe.module';
 import { CustomerModule } from './customer/customer.module';
 import { EventsModule } from './events/events.module';
 // import { S3Module } from './s3/s3.module';
@@ -46,6 +47,7 @@ import { EventsModule } from './events/events.module';
     ]),
     EventsModule,
     CustomerModule,
+    StripeModule,
   ],
   controllers: [AppController],
   providers: [
