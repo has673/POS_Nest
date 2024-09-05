@@ -124,6 +124,9 @@ model Order {
   customerId  Int
   customer    Customer  @relation(fields: [customerId], references: [id])
   orderItems  OrderItem[]
+  stripeSessionId   String?
+  stripePaymentIntentId String? 
+  paymentStatus     PaymentStatus @default(PENDING) // Enum for payment status
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }
@@ -204,4 +207,10 @@ enum OrderStatus {
 enum Role {
   ADMIN
   SUBADMIN
+}
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
 }
