@@ -121,7 +121,8 @@ export class AuthService {
       { expiresIn: '1h' },
     );
 
-    return { token };
+    // return { token };
+    return { token: `Bearer ${token}` };
   }
 
   async recoverPassword(

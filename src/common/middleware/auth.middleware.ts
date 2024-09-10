@@ -17,7 +17,7 @@ export class AuthMiddleware implements NestMiddleware {
       throw new UnauthorizedException('No authorization header provided');
     }
 
-    const token = authHeader;
+    const token = authHeader.split(' ')[1];
     if (!token) {
       console.log('no token provided');
       throw new UnauthorizedException('No token provided');

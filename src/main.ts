@@ -8,7 +8,7 @@ async function bootstrap() {
 
   // Define CORS options
   const corsOptions: CorsOptions = {
-    origin: 'http://localhost:3000',
+    origin: 'https://pos-next-chi.vercel.app',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
   };
