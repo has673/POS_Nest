@@ -13,7 +13,8 @@ async function bootstrap() {
     credentials: true,
   };
 
-  // Enable CORS with the defined options
+  // Enable CORS with the defined CorsOptions
+
   app.enableCors(corsOptions);
 
   // Swagger configuration
