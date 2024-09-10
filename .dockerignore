@@ -1,0 +1,47 @@
+# Node modules and other dependencies
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Logs
+logs
+*.log
+
+# Build output
+.next
+out
+
+# Env files
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Vercel/Netlify/Other deployment directories
+.vercel
+.netlify
+
+# Docker files
+Dockerfile
+Dockerfile.dev
+
+# Git
+.git
+.gitignore
+
+# IDE specific files
+.vscode
+*.swp
+.idea
+
+# Temporary files and directories
+*.tmp
+*.swp
+*.swo
+*.bak
+*.lock
+.DS_Store
+
+# Coverage directory from test tools like jest
+coverage
